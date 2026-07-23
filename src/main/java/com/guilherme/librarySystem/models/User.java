@@ -1,7 +1,6 @@
 package com.guilherme.librarySystem.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-//import com.guilherme.librarySystem.models.enums.ProfileEnum;
 import com.guilherme.librarySystem.models.enums.ProfileEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,9 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import jakarta.validation.constraints.Email;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
