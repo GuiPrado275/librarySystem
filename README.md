@@ -144,8 +144,6 @@ jwt.secret=SEU_SEGREDO_AQUI
 http://localhost:7777
 ```
 
-> ⚠️ **Importante:** o arquivo `application.properties` (com credenciais reais) não deve ser versionado — use sempre o `.example` como referência e mantenha o real no `.gitignore`.
-
 ## 📌 Regras de negócio (resumo)
 
 | Regra                                            | Valor          |
@@ -165,8 +163,3 @@ O projeto inclui testes com **Spring Boot Test**. Para rodar:
 ## 📄 Licença
 
 Projeto acadêmico/portfólio, de uso livre para fins de estudo.
-
-## 👨‍💻 Autor
-
-**Guilherme Prado**
-GitHub: [@GuiPrado275](https://github.com/GuiPrado275)
