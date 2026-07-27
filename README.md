@@ -153,13 +153,6 @@ http://localhost:7777
 | Multa por dia de atraso                            | R$ 2,00        |
 | Bloqueio de novo empréstimo com atraso pendente    | Sim            |
 
-## 🧪 Testes
-
-O projeto inclui testes com **Spring Boot Test**. Para rodar:
-```bash
-./mvnw test
-```
-
 ## 📄 Licença
 
 Projeto acadêmico/portfólio, de uso livre para fins de estudo.
