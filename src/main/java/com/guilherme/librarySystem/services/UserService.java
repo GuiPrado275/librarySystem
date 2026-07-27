@@ -42,6 +42,12 @@ public class UserService {
 
     }
 
+    public User findByEmail(String email) {
+        User user = this.userRepository.findByEmail(email);
+        return Optional.ofNullable(user).orElseThrow(() -> new ObjectNotFoundException(
+                "Usuário não encontrado! Email: " + email + ", Tipo: " + User.class.getName()));
+    }
+
     @Transactional
     public User create(User user){
         if (this.userRepository.existsByEmail(user.getEmail())) {
