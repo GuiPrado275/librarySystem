@@ -32,12 +32,9 @@ public class LoanService {
 
     private static final Logger logger = LoggerFactory.getLogger(LoanService.class);
 
-    // Business rules centralized here; if you want them configurable per environment,
-    // swap these for @Value fields read from application.properties.
     public static final int MAX_ACTIVE_LOANS_PER_USER = 5;
     public static final int LOAN_PERIOD_DAYS = 14;
     public static final BigDecimal FINE_PER_DAY = new BigDecimal("2.00");
-    public static final int DUE_SOON_THRESHOLD_DAYS = 2; //used by the Scheduler to warn before the due date
 
     @Autowired
     private LoanRepository loanRepository;
@@ -54,7 +51,6 @@ public class LoanService {
     @Autowired
     private BookService bookService;
 
-    //Query: the loan's owner (USER) or staff (LIBRARIAN/ADMIN)
     public Loan findById(Long id) {
         Loan loan = this.loanRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(
@@ -77,18 +73,6 @@ public class LoanService {
     public List<Loan> findAllActive() {
         checkStaff();
         return this.loanRepository.findByIsReturnedFalse();
-    }
-
-    //Loans maturing in x days
-    public List<Loan> findLoansDueSoon() {
-        LocalDate today = LocalDate.now();
-        return this.loanRepository.findByIsReturnedFalseAndDueDateBetween(
-                today, today.plusDays(DUE_SOON_THRESHOLD_DAYS));
-    }
-
-    //overdue loans
-    public List<Loan> findOverdueLoans() {
-        return this.loanRepository.findByIsReturnedFalseAndDueDateBefore(LocalDate.now());
     }
 
     @Transactional
@@ -154,7 +138,7 @@ public class LoanService {
         return loan;
     }
 
-    //only LIBRARIAN/ADMIN can register it (the librarian is the one who checks the physical book)
+    //only LIBRARIAN/ADMIN
     @Transactional
     public Loan returnLoan(Long loanId) {
         checkStaff();
@@ -192,8 +176,8 @@ public class LoanService {
                 .anyMatch(loan -> loan.getDueDate().isBefore(today));
     }
 
-    // ---- Reservation / waiting queue ----
-    // USER can only reserve for themselves; LIBRARIAN/ADMIN can reserve for any user.
+    // Reservation / waiting queue
+    // USER can only reserve for themselves, LIBRARIAN/ADMIN can reserve for any user.
     @Transactional
     public Reservation reserve(LoanCreateDTO dto) {
         return reserve(dto.userId(), dto.bookId());
@@ -257,9 +241,6 @@ public class LoanService {
         return this.reservationRepository.findByBookIdAndIsActiveTrueOrderByReservationDateAsc(bookId);
     }
 
-    //Notifies the next person in the waiting queue that the book is available.
-    //For now this just logs it; the ideal hook is to inject a NotificationService
-    //(e-mail, push, etc.) here in place of the logger.info
     private void notifyNextInQueue(Book book) {
         this.reservationRepository.findFirstByBookIdAndIsActiveTrueOrderByReservationDateAsc(book.getId())
                 .ifPresent(reservation -> {
@@ -271,8 +252,6 @@ public class LoanService {
     }
 
     //Authorization
-    //Same mechanism used in UserService/TicketService (UserSpringSecurity + hasRole),
-    //just centralized here so the expression isn't repeated in every method.
     private void checkOwnerOrStaff(Long userId) {
         UserSpringSecurity userSpringSecurity = UserService.autheticated();
         if (Objects.isNull(userSpringSecurity)
