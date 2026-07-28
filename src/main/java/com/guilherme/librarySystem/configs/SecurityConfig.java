@@ -30,10 +30,6 @@ public class SecurityConfig {
     @Autowired
     private JWTUtil jwtUtil;
 
-    private static final String[] PUBLIC_MATCHERS = { //open route
-            ""
-    };
-
     private static final String[] PUBLIC_MATCHERS_POST = { //user and login are public for POST
             "/user",
             "/login"
@@ -54,7 +50,6 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-                .requestMatchers(PUBLIC_MATCHERS).permitAll() //any PUBLIC_MATCHERS/POST request is allowed
                 .anyRequest().authenticated()).authenticationManager(authenticationManager);
 
         http.addFilter(new JWTAuthenticationFilter(authenticationManager, jwtUtil));
