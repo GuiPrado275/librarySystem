@@ -11,8 +11,6 @@ spring.profiles.active=dev
 
 spring.output.ansi.enabled=ALWAYS
 
-spring.web.error.include-exception=true
-
 jwt.secret=SEU_SEGREDO_AQUI
 jwt.expiration=86400000
 
